@@ -1,95 +1,62 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+'use client'
+import {useRootData} from "@/context/rootContext";
+import {useEffect} from "react";
+import {getMyAgent} from "@/requests/myAgent";
+import {Card, Grid, Typography} from "@mui/material";
+import {AgentCard} from "@/components/cards/agentCard";
+import {StatusCard} from "@/components/cards/statusCard";
+import {ContractsCard} from "@/components/cards/contractsCard";
+import {WaypointsCard} from "@/components/cards/waypointsCard";
+import {MyShipsCard} from "@/components/cards/shipCard";
 
 export default function Home() {
+  const {data, setData} = useRootData()
+  const token = localStorage.getItem('space_trader_token')
+  console.log(data.myAgent)
+
+  useEffect(() => {
+    if (!data.myAgent){
+      if (token) {
+        getMyAgent(token)
+          .then((response) => {
+            return response.json()
+          }).then((data) => {
+          if (data.error) {
+            //Todo add toast for error
+            console.log(data.error.message)
+          } else {
+            setData(prevData => ({
+              ...prevData,
+              myAgent: data.data
+            }));
+          }
+        })
+      }
+    }
+  }, []);
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    <div>
+      <main>
+        <h1>Space Trader</h1>
+        <Grid container spacing={2} p={2}>
+          <Grid item xs={12} sm={6}>
+            <AgentCard />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <StatusCard />
+          </Grid>
+          <Grid item xs={12}>
+            <ContractsCard />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <WaypointsCard />
+          </Grid>
+          <Grid item xs={12}>
+            <MyShipsCard/>
+          </Grid>
+        </Grid>
+      </main>
+    </div>
   )
 }

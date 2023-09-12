@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "properties": {
+    "symbol": {
+      "type": "string",
+      "description": "The symbol of the waypoint."
+    },
+    "type": {
+      "$ref": "./WaypointType.json"
+    },
+    "x": {
+      "type": "integer",
+      "description": "Position in the universe in the x axis."
+    },
+    "y": {
+      "type": "integer",
+      "description": "Position in the universe in the y axis."
+    }
+  },
+  "required": [
+    "symbol",
+    "type",
+    "x",
+    "y"
+  ]
+}

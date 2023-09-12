@@ -1,0 +1,34 @@
+{
+  "description": "The destination or departure of a ships nav route.",
+  "type": "object",
+  "properties": {
+    "symbol": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The symbol of the waypoint."
+    },
+    "type": {
+      "$ref": "./WaypointType.json"
+    },
+    "systemSymbol": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The symbol of the system the waypoint is in."
+    },
+    "x": {
+      "type": "integer",
+      "description": "Position in the universe in the x axis."
+    },
+    "y": {
+      "type": "integer",
+      "description": "Position in the universe in the y axis."
+    }
+  },
+  "required": [
+    "symbol",
+    "type",
+    "systemSymbol",
+    "x",
+    "y"
+  ]
+}

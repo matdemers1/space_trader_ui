@@ -1,0 +1,56 @@
+{
+  "description": "A waypoint is a location that ships can travel to such as a Planet, Moon or Space Station.",
+  "type": "object",
+  "properties": {
+    "symbol": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Symbol fo the waypoint."
+    },
+    "type": {
+      "$ref": "./WaypointType.json"
+    },
+    "systemSymbol": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The symbol of the system this waypoint belongs to."
+    },
+    "x": {
+      "type": "integer",
+      "description": "Position in the universe in the x axis."
+    },
+    "y": {
+      "type": "integer",
+      "description": "Position in the universe in the Y axis."
+    },
+    "orbitals": {
+      "type": "array",
+      "description": "Waypoints that orbit this waypoint.",
+      "items": {
+        "$ref": "./WaypointOrbital.json"
+      }
+    },
+    "faction": {
+      "$ref": "./WaypointFaction.json"
+    },
+    "traits": {
+      "type": "array",
+      "description": "The traits of the waypoint.",
+      "items": {
+        "$ref": "./WaypointTrait.json"
+      }
+    },
+    "chart": {
+      "$ref": "./Chart.json"
+    }
+  },
+  "required": [
+    "symbol",
+    "type",
+    "systemSymbol",
+    "x",
+    "y",
+    "orbitals",
+    "traits"
+  ]
+}
