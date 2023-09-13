@@ -11,8 +11,7 @@ import {WaypointHeader} from "@/components/common/waypoint/waypointHeader";
 import {ShipyardModal} from "@/components/modals/shipyardModal";
 
 export const WaypointsCard = () => {
-  const { data } = useRootData()
-  const [waypoints, setWaypoints] = useState<Waypoint[]>([]);
+  const { data, systemWaypoints, setSystemWaypoints } = useRootData()
   const [shipyardSystem, setShipyardSystem] = useState<string>('');
 
   useEffect(() => {
@@ -20,8 +19,7 @@ export const WaypointsCard = () => {
       const system = data.myAgent?.headquarters.substring(0, 7)
       getWaypoints(system, 1).then((response) => {
         response.json().then((json) => {
-          console.log(json.data)
-          setWaypoints(json.data)
+          setSystemWaypoints(json)
         });
       });
     }
@@ -49,13 +47,13 @@ export const WaypointsCard = () => {
           </Typography>
         </Box>
         <Divider sx={{marginBottom:1}}/>
-        {waypoints.length>0&& (
+        {systemWaypoints.length>0&& (
           <>
             <Button
               variant="outlined"
               sx={{ marginRight:1 }}
               onClick={() => {
-                const shipyardSystem = waypoints.find((waypoint) => waypoint.traits.find((trait) => trait.symbol === 'SHIPYARD'))
+                const shipyardSystem = systemWaypoints.find((waypoint) => waypoint.traits.find((trait) => trait.symbol === 'SHIPYARD'))
                 if (shipyardSystem) {
                   setShipyardSystem(shipyardSystem.symbol)
                 }
@@ -66,7 +64,7 @@ export const WaypointsCard = () => {
             <Button
               variant="outlined"
               onClick={() => {
-                const jumpGateSystem = waypoints.find((waypoint) => waypoint.type === 'JUMP_GATE')
+                const jumpGateSystem = systemWaypoints.find((waypoint) => waypoint.type === 'JUMP_GATE')
                 console.log(jumpGateSystem?.symbol)
               }}
             >
@@ -78,8 +76,8 @@ export const WaypointsCard = () => {
               defaultExpandIcon={<ChevronRightIcon />}
               sx={{ flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
             >
-              {getWaypointTypes(waypoints).map((type, index) => {
-                const systems = waypoints.filter((waypoint) => waypoint.type === type)
+              {getWaypointTypes(systemWaypoints).map((type, index) => {
+                const systems = systemWaypoints.filter((waypoint) => waypoint.type === type)
                 return (
                   <TreeItem key={index} nodeId={index.toString()} label={<WaypointTypeHeader type={type} length={systems.length}/>}>
                     {systems.map((waypoint, index2) => {
