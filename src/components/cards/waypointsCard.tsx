@@ -15,15 +15,15 @@ export const WaypointsCard = () => {
   const [shipyardSystem, setShipyardSystem] = useState<string>('');
 
   useEffect(() => {
-    if (data.myAgent?.headquarters) {
+    if (data.myAgent?.headquarters && systemWaypoints.length === 0) {
       const system = data.myAgent?.headquarters.substring(0, 7)
       getWaypoints(system, 1).then((response) => {
         response.json().then((json) => {
-          setSystemWaypoints(json)
+          setSystemWaypoints(json.data)
         });
       });
     }
-  }, [data.myAgent?.headquarters]);
+  }, [data.myAgent?.headquarters, setSystemWaypoints, systemWaypoints.length]);
 
   const getWaypointTypes = (waypoints: Waypoint[]) => {
     const types: string[] = []

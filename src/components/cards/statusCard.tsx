@@ -5,6 +5,7 @@ import {useEffect} from "react";
 import {getStatus} from "@/requests/status";
 import {Card, Divider, Typography} from "@mui/material";
 import {TextRow} from "@/components/common/textRow";
+import {formatDateShort} from "@/components/common/date";
 
 export const StatusCard = () => {
   const token = localStorage.getItem('space_trader_token')
@@ -31,7 +32,8 @@ export const StatusCard = () => {
     }
   }, [data.status]);
 
-  console.log(data.status)
+  // Format a date like 2023-09-16T16:00:00.000Z to 2023-09-16 16:00:00 based on the eastern time zone using dayJS
+
 
   return (
     <Card raised sx={{padding:2}}>
@@ -42,7 +44,7 @@ export const StatusCard = () => {
       <Divider />
       <TextRow label={'API version'} value={data.status?.version} />
       <Divider />
-      <TextRow label={'Next Reset'} value={data.status?.serverResets.next} />
+      <TextRow label={'Next Reset'} value={formatDateShort(data.status?.serverResets.next)} />
       <Divider />
       <TextRow label={'Reset Frequency'} value={data.status?.serverResets.frequency} />
     </Card>

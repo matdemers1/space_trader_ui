@@ -2,12 +2,18 @@ import {ShipNav} from "@/types/shipType";
 import {Box, Card, Divider, Grid, LinearProgress, Typography} from "@mui/material";
 import {grey} from "@mui/material/colors";
 import {DisplayBox} from "@/components/common/displayBox";
+import dayjs from "dayjs";
 
 export interface NavCardProps {
   nav: ShipNav
 }
 
 export const NavCard = ({nav}: NavCardProps) => {
+  console.log(nav)
+
+  // format date using dayjs
+  // const date = dayjs(nav.route.arrival).format('DD/MM/YYYY')
+
   return (
     <Card raised sx={{ padding:1 }}>
       <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
@@ -24,7 +30,10 @@ export const NavCard = ({nav}: NavCardProps) => {
       </Grid>
       {nav.route.departure.symbol !== nav.route.destination.symbol && (
         <Box>
+          <Box display="flex" justifyContent="space-between">
           <Typography variant="h6" component="h2"> Flight: </Typography>
+          <Typography variant="body1" component="h2"> Arrival: {dayjs(nav.route.arrival).format('DD/MM/YYYY')} </Typography>
+          </Box>
           <LinearProgress variant="determinate" value={1 / 1 * 100}/>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body1" component="h2"> Departure: {nav.route.departure.symbol} </Typography>

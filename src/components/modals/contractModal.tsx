@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import {acceptContract} from "@/requests/contracts";
 import {useRootData} from "@/context/rootContext";
+import {formatDateLong} from "@/components/common/date";
 
 interface ContractModalProps {
   modalContract: ContractSimple
@@ -59,8 +60,8 @@ export const ContractModal = ({ modalContract, setModalContract, contracts, upda
       </DialogTitle>
       <DialogContent>
         <Typography variant={'body1'}><b>Type:</b> {modalContract.type}</Typography>
-        <Typography variant={'body1'}><b>Open Till:</b> {modalContract.openTill.toString()}</Typography>
-        <Typography variant={'body1'}><b>Expiration:</b> {modalContract.expiration.toString()}</Typography>
+        <Typography variant={'body1'}><b>Open Till:</b> {formatDateLong(modalContract.openTill.toString())}</Typography>
+        <Typography variant={'body1'}><b>Expiration:</b> {formatDateLong(modalContract.expiration.toString())}</Typography>
         <Typography variant={'body1'}><b>On Accepted:</b> {modalContract.onAccepted}</Typography>
         <Typography variant={'body1'}><b>On Fulfilled:</b> {modalContract.onFulfilled}</Typography>
         <Divider sx={{margin: 2}}/>
