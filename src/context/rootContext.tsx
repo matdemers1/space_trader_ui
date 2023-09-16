@@ -1,5 +1,5 @@
 'use client'
-import { createContext, useContext, ReactNode, useState } from 'react';
+import {createContext, useContext, ReactNode, useState, useEffect} from 'react';
 import {ContractSimple} from "@/types/contract";
 import {Waypoint} from "@/types/waypoint";
 
@@ -15,9 +15,26 @@ interface RootContextProps {
 const RootStore = createContext<RootContextProps | undefined>(undefined);
 
 export const RootProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [data, setData] = useState<{ [key: string]: any }>({});
-  const [acceptedContracts, setAcceptedContracts] = useState<ContractSimple[]>([]);
-  const [systemWaypoints, setSystemWaypoints] = useState<Waypoint[]>([]);
+  const initialData = JSON.parse(localStorage.getItem('data') || '{}');
+  const initialContracts = JSON.parse(localStorage.getItem('acceptedContracts') || '[]');
+  const initialWaypoints = JSON.parse(localStorage.getItem('systemWaypoints') || '[]');
+
+  const [data, setData] = useState<{ [key: string]: any }>(initialData);
+  const [acceptedContracts, setAcceptedContracts] = useState<ContractSimple[]>(initialContracts);
+  const [systemWaypoints, setSystemWaypoints] = useState<Waypoint[]>(initialWaypoints);
+
+  // useEffect to save to local storage whenever state changes
+  useEffect(() => {
+    localStorage.setItem('data', JSON.stringify(data));
+  }, [data]);
+
+  useEffect(() => {
+    localStorage.setItem('acceptedContracts', JSON.stringify(acceptedContracts));
+  }, [acceptedContracts]);
+
+  useEffect(() => {
+    localStorage.setItem('systemWaypoints', JSON.stringify(systemWaypoints));
+  }, [systemWaypoints]);
 
   return <RootStore.Provider
     value={{
