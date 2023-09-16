@@ -114,7 +114,14 @@ export interface ShipRegistration {
 export interface ShipCargo {
   capacity: number,
   units: number,
-  inventory: any[]
+  inventory: ShipCargoItem[]
+}
+
+export interface ShipCargoItem {
+  symbol: string,
+  name: string,
+  description: string,
+  units: number,
 }
 
 export interface Ship {

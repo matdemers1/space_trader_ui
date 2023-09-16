@@ -3,17 +3,39 @@ import {Box, Card, Divider, Grid, LinearProgress, Typography} from "@mui/materia
 import {grey} from "@mui/material/colors";
 import {DisplayBox} from "@/components/common/displayBox";
 import dayjs from "dayjs";
+import {formatDateLong, formatDateShort} from "@/components/common/date";
+import {useEffect, useState} from "react";
 
 export interface NavCardProps {
   nav: ShipNav
+  setRefresh: (refresh: boolean) => void
 }
 
-export const NavCard = ({nav}: NavCardProps) => {
-  console.log(nav)
+export const NavCard = ({nav, setRefresh}: NavCardProps) => {
+  const [progress, setProgress] = useState(0);
 
-  // format date using dayjs
-  // const date = dayjs(nav.route.arrival).format('DD/MM/YYYY')
+  const isArrivalInThePast = () => { return dayjs(nav.route.arrival).isBefore(dayjs())}
 
+  const getDiffBetweenArrivalAndDeparture = () => {
+    return dayjs(nav.route.arrival).diff(dayjs(nav.route.departureTime), 'second')
+  }
+
+  const getDiffBetweenArrivalAndNow = () => {
+    return dayjs(nav.route.arrival).diff(dayjs(), 'second')
+  }
+
+  const getProgress = () => {
+    return (getDiffBetweenArrivalAndNow() / getDiffBetweenArrivalAndDeparture()) * 100
+  }
+  //only update progress every second if (nav.route.departure.symbol !== nav.route.destination.symbol && !isArrivalInThePast())
+  setInterval(() => {
+    if (nav.route.departure.symbol !== nav.route.destination.symbol && !isArrivalInThePast()){
+      setProgress(getProgress())
+    } else if (isArrivalInThePast() && nav.status === 'IN_TRANSIT') {
+      setProgress(0)
+      setRefresh(true)
+    }
+  }, 1000)
   return (
     <Card raised sx={{ padding:1 }}>
       <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
@@ -28,13 +50,13 @@ export const NavCard = ({nav}: NavCardProps) => {
         <DisplayBox label={'System'} value={nav.systemSymbol}/>
         <DisplayBox label={'Waypoint'} value={nav.waypointSymbol}/>
       </Grid>
-      {nav.route.departure.symbol !== nav.route.destination.symbol && (
+      {(nav.route.departure.symbol !== nav.route.destination.symbol && !isArrivalInThePast()) && (
         <Box>
           <Box display="flex" justifyContent="space-between">
           <Typography variant="h6" component="h2"> Flight: </Typography>
-          <Typography variant="body1" component="h2"> Arrival: {dayjs(nav.route.arrival).format('DD/MM/YYYY')} </Typography>
+          <Typography variant="body1" component="h2"> Arrival: {formatDateLong(nav.route.arrival)} </Typography>
           </Box>
-          <LinearProgress variant="determinate" value={1 / 1 * 100}/>
+          <LinearProgress variant="determinate" value={100-progress}/>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body1" component="h2"> Departure: {nav.route.departure.symbol} </Typography>
             <Typography variant="body1" component="h2"> Destination: {nav.route.destination.symbol} </Typography>

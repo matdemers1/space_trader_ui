@@ -3,16 +3,28 @@ import {Box, Button, Card, Divider, LinearProgress, Typography} from "@mui/mater
 
 export interface CargoCardProps {
   cargo: ShipCargo
+  disableInventory?: boolean
+  showInventory?: (show: boolean) => void
 }
 
-export const CargoCard = ({cargo}: CargoCardProps) => {
+export const CargoCard = ({cargo, disableInventory, showInventory}: CargoCardProps) => {
   return (
     <Card raised sx={{ padding:1 }}>
       <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
         <Typography variant="h6" component="h2">
           Cargo:
         </Typography>
-        <Button variant={'outlined'} size={'small'}> View Inventory</Button>
+        {!disableInventory && showInventory && (
+          <Button
+            variant={'outlined'}
+            size={'small'}
+            onClick={
+              ()=> showInventory(true)
+            }
+          >
+            View Inventory
+          </Button>
+        )}
       </Box>
       <Divider sx={{margin:1, marginBottom:2}}/>
       <Box>

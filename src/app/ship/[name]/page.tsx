@@ -9,11 +9,13 @@ import {CrewCard} from "@/components/cards/Ship/CrewCard";
 import {CargoCard} from "@/components/cards/Ship/CargoCard";
 import {ShipControlCard} from "@/components/cards/Ship/ShipControlCard";
 import {NavCard} from "@/components/cards/Ship/NavCard";
+import {CargoModal} from "@/components/modals/cargoModal";
 
 export default function ShipPage() {
   const pathname = usePathname()
   const [ship, setShip] = useState<Ship | undefined>(undefined)
   const [refresh, setRefresh] = useState<boolean>(false)
+  const [showInventory, setShowInventory] = useState<boolean>(false)
 
   useEffect(() => {
     if(!ship || refresh){
@@ -44,7 +46,7 @@ export default function ShipPage() {
             <ShipHeader shipRegistration={ship?.registration} shipFuel={ship?.fuel}/>
           </Grid>
           <Grid item xs={12}>
-            <NavCard nav={ship.nav}/>
+            <NavCard nav={ship.nav} setRefresh={setRefresh}/>
           </Grid>
           <Grid item xs={12}>
             <ShipControlCard registration={ship.registration} nav={ship.nav} setRefresh={setRefresh}/>
@@ -53,9 +55,16 @@ export default function ShipPage() {
             <CrewCard crew={ship?.crew}/>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <CargoCard cargo={ship?.cargo}/>
+            <CargoCard cargo={ship?.cargo} showInventory={setShowInventory}/>
           </Grid>
         </Grid>
+        <CargoModal
+          cargo={ship.cargo}
+          isOpen={showInventory}
+          setIsOpen={setShowInventory}
+          systemSymbol={ship.nav.systemSymbol}
+          waypointSymbol={ship.nav.waypointSymbol}
+        />
       </main>
     </div>
   )
