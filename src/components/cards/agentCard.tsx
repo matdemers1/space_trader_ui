@@ -1,16 +1,39 @@
 'use client'
 import {useRootData} from "@/context/rootContext";
-import {Card, Divider, Typography} from "@mui/material";
+import {Box, Card, Divider, IconButton, Typography} from "@mui/material";
 import {TextRow} from "@/components/common/textRow";
+import RefreshIcon from '@mui/icons-material/Refresh';
+import {getMyAgent} from "@/requests/myAgent";
 
 export const AgentCard = () => {
-  const { data } = useRootData();
+  const { data, setData } = useRootData();
+
+  const refresh = () => {
+    getMyAgent()
+      .then((response) => {
+        return response.json()
+      }).then((data) => {
+      if (data.error) {
+        console.log(data.error.message)
+      } else {
+        setData(prevData => ({
+          ...prevData,
+          myAgent: data.data
+        }));
+      }
+    })
+  }
 
   return (
     <Card raised sx={{padding:2}}>
-      <Typography variant="h5" component="h2">
-        My Agent
-      </Typography>
+      <Box display={'flex'} flexDirection={'row'} justifyContent={'space-between'}>
+        <Typography variant="h5" component="h2">
+          Agent
+        </Typography>
+        <IconButton onClick={refresh}>
+          <RefreshIcon />
+        </IconButton>
+      </Box>
       <TextRow label={'Callsign'} value={data.myAgent?.symbol} />
       <Divider />
       <TextRow label={'Credits'} value={data.myAgent?.credits} />

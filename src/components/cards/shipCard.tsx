@@ -12,6 +12,7 @@ export const MyShipsCard = () => {
   const [ships, setShips] = useState<Ship[]>([])
 
   useEffect(() => {
+    console.log('fetching')
     getMyShips().then((response) => {
       response.json().then((json) => {
         setShips(json.data)

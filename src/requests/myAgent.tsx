@@ -1,9 +1,9 @@
-export const getMyAgent = (token: string) => {
+export const getMyAgent = () => {
   const options = {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      'Authorization': `Bearer ${localStorage.getItem('space_trader_token')}`
     },
   };
 

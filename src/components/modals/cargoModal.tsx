@@ -11,9 +11,11 @@ export interface CargoModalProps {
   setIsOpen: (isOpen: boolean) => void
   systemSymbol: string
   waypointSymbol: string
+  shipName: string
+  setRefresh: (refresh: boolean) => void
 }
 
-export const CargoModal = ({ cargo, isOpen, setIsOpen, waypointSymbol, systemSymbol }: CargoModalProps) => {
+export const CargoModal = ({ cargo, isOpen, setIsOpen, waypointSymbol, systemSymbol, shipName, setRefresh }: CargoModalProps) => {
   const fetchMarketData = async () => {
     getMarketData(systemSymbol, waypointSymbol).then((res)=>{
       if(res.status===200){
@@ -32,7 +34,7 @@ export const CargoModal = ({ cargo, isOpen, setIsOpen, waypointSymbol, systemSym
         <Grid container spacing={2} padding={2}>
           {cargo.inventory.map((item, index)=>(
             <Grid item xs={12} sm={6} key={index}>
-              <CargoItemCard cargoItem={item}/>
+              <CargoItemCard cargoItem={item} shipName={shipName} setRefresh={setRefresh}/>
             </Grid>
           ))}
         </Grid>

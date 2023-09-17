@@ -64,6 +64,8 @@ export default function ShipPage() {
           setIsOpen={setShowInventory}
           systemSymbol={ship.nav.systemSymbol}
           waypointSymbol={ship.nav.waypointSymbol}
+          shipName={ship.registration.name}
+          setRefresh={setRefresh}
         />
       </main>
     </div>

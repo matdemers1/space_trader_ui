@@ -11,27 +11,23 @@ import {MyShipsCard} from "@/components/cards/shipCard";
 
 export default function Home() {
   const {data, setData} = useRootData()
-  const token = localStorage.getItem('space_trader_token')
-  console.log(data.myAgent)
 
   useEffect(() => {
     if (!data.myAgent){
-      if (token) {
-        getMyAgent(token)
-          .then((response) => {
-            return response.json()
-          }).then((data) => {
-          if (data.error) {
-            //Todo add toast for error
-            console.log(data.error.message)
-          } else {
-            setData(prevData => ({
-              ...prevData,
-              myAgent: data.data
-            }));
-          }
-        })
-      }
+      getMyAgent()
+        .then((response) => {
+          return response.json()
+        }).then((data) => {
+        if (data.error) {
+          //Todo add toast for error
+          console.log(data.error.message)
+        } else {
+          setData(prevData => ({
+            ...prevData,
+            myAgent: data.data
+          }));
+        }
+      })
     }
   }, []);
 

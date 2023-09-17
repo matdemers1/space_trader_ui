@@ -1,6 +1,6 @@
 import {extractMineral} from "@/requests/ship";
 import {useState} from "react";
-import {Box, Button, Typography} from "@mui/material";
+import {Box, Button, Switch, Typography} from "@mui/material";
 
 export interface ExtractionBlockProps {
   name: string
@@ -9,6 +9,7 @@ export interface ExtractionBlockProps {
 
 export const ExtractionBlock = ({name, setRefresh}: ExtractionBlockProps) => {
   const [cooldown, setCooldown] = useState<number>(0)
+  const [auto, setAuto] = useState<boolean>(false)
 
   const runShipExtraction = () => {
     extractMineral(name).then((res)=>{
@@ -24,15 +25,17 @@ export const ExtractionBlock = ({name, setRefresh}: ExtractionBlockProps) => {
     })
   }
 
-  // If the cooldown is not zero every second subtract one from the cooldown
   if(cooldown !== 0){
     setTimeout(()=>{
       setCooldown(cooldown-1)
+      if (auto && cooldown === 1){
+        runShipExtraction()
+      }
     }, 1000)
   }
 
   return (
-    <Box>
+    <Box display={'flex'} alignItems={'center'} justifyContent={'center'} flexDirection={'column'}>
       <Button
         size={'small'}
         sx={{m:1}}
@@ -42,6 +45,10 @@ export const ExtractionBlock = ({name, setRefresh}: ExtractionBlockProps) => {
       >
         {cooldown !== 0 ? `Cooldown: ${cooldown}` : 'Extract'}
       </Button>
+      <Box display={'flex'} alignItems={'center'} justifyContent={'center'}>
+        <Switch value={auto} onChange={()=>setAuto(!auto)}/>
+        <Typography sx={{m:1}}>{'Auto'}</Typography>
+      </Box>
     </Box>
   )
 }
