@@ -3,13 +3,14 @@ import {usePathname} from "next/navigation";
 import {Ship} from "@/types/shipType";
 import {useEffect, useState} from "react";
 import {getShip} from "@/requests/ship";
-import {Grid} from "@mui/material";
+import {Box, Grid} from "@mui/material";
 import {ShipHeader} from "@/components/cards/Ship/ShipHeader";
 import {CrewCard} from "@/components/cards/Ship/CrewCard";
 import {CargoCard} from "@/components/cards/Ship/CargoCard";
 import {ShipControlCard} from "@/components/cards/Ship/ShipControlCard";
 import {NavCard} from "@/components/cards/Ship/NavCard";
 import {CargoModal} from "@/components/modals/cargoModal";
+import {AgentCard} from "@/components/cards/agentCard";
 
 export default function ShipPage() {
   const pathname = usePathname()
@@ -40,7 +41,10 @@ export default function ShipPage() {
   return (
     <div>
       <main>
-        <h1>Space Trader</h1>
+        <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} flexDirection={'row'}>
+          <h1>Space Trader</h1>
+          <AgentCard simple/>
+        </Box>
         <Grid container spacing={2} padding={2}>
           <Grid item xs={12}>
             <ShipHeader shipRegistration={ship?.registration} shipFuel={ship?.fuel}/>
@@ -49,7 +53,7 @@ export default function ShipPage() {
             <NavCard nav={ship.nav} setRefresh={setRefresh}/>
           </Grid>
           <Grid item xs={12}>
-            <ShipControlCard registration={ship.registration} nav={ship.nav} setRefresh={setRefresh}/>
+            <ShipControlCard registration={ship.registration} nav={ship.nav} cargo={ship.cargo} setRefresh={setRefresh}/>
           </Grid>
           <Grid item xs={12} sm={6}>
             <CrewCard crew={ship?.crew}/>

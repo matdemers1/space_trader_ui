@@ -5,11 +5,13 @@ import {Box, Button, Switch, Typography} from "@mui/material";
 export interface ExtractionBlockProps {
   name: string
   setRefresh: (refresh: boolean) => void
+  autoMine: boolean
+  setAutoMine: (autoMine: boolean) => void
+  disabled?: boolean
 }
 
-export const ExtractionBlock = ({name, setRefresh}: ExtractionBlockProps) => {
+export const ExtractionBlock = ({name, setRefresh, autoMine, setAutoMine, disabled}: ExtractionBlockProps) => {
   const [cooldown, setCooldown] = useState<number>(0)
-  const [auto, setAuto] = useState<boolean>(false)
 
   const runShipExtraction = () => {
     extractMineral(name).then((res)=>{
@@ -25,11 +27,12 @@ export const ExtractionBlock = ({name, setRefresh}: ExtractionBlockProps) => {
     })
   }
 
-  if(cooldown !== 0){
+  if(cooldown !== 0 && autoMine && !disabled){
     setTimeout(()=>{
-      setCooldown(cooldown-1)
-      if (auto && cooldown === 1){
+      if (autoMine && cooldown === 1){
         runShipExtraction()
+      } else {
+        setCooldown(cooldown-1)
       }
     }, 1000)
   }
@@ -40,13 +43,13 @@ export const ExtractionBlock = ({name, setRefresh}: ExtractionBlockProps) => {
         size={'small'}
         sx={{m:1}}
         variant={'outlined'}
-        disabled={cooldown !== 0}
+        disabled={cooldown !== 0 || disabled}
         onClick={runShipExtraction}
       >
         {cooldown !== 0 ? `Cooldown: ${cooldown}` : 'Extract'}
       </Button>
       <Box display={'flex'} alignItems={'center'} justifyContent={'center'}>
-        <Switch value={auto} onChange={()=>setAuto(!auto)}/>
+        <Switch defaultChecked={autoMine} onChange={()=>setAutoMine(!autoMine)}/>
         <Typography sx={{m:1}}>{'Auto'}</Typography>
       </Box>
     </Box>

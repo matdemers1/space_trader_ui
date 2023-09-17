@@ -5,7 +5,11 @@ import {TextRow} from "@/components/common/textRow";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import {getMyAgent} from "@/requests/myAgent";
 
-export const AgentCard = () => {
+interface AgentCardProps {
+  simple?: boolean
+}
+
+export const AgentCard = ({simple}:AgentCardProps) => {
   const { data, setData } = useRootData();
 
   const refresh = () => {
@@ -26,21 +30,23 @@ export const AgentCard = () => {
 
   return (
     <Card raised sx={{padding:2}}>
-      <Box display={'flex'} flexDirection={'row'} justifyContent={'space-between'}>
-        <Typography variant="h5" component="h2">
-          Agent
-        </Typography>
-        <IconButton onClick={refresh}>
-          <RefreshIcon />
-        </IconButton>
-      </Box>
+      {!simple &&
+        <Box display={'flex'} flexDirection={'row'} justifyContent={'space-between'}>
+          <Typography variant="h5" component="h2">
+            Agent
+          </Typography>
+          <IconButton onClick={refresh}>
+            <RefreshIcon/>
+          </IconButton>
+        </Box>
+      }
       <TextRow label={'Callsign'} value={data.myAgent?.symbol} />
       <Divider />
       <TextRow label={'Credits'} value={data.myAgent?.credits} />
-      <Divider />
-      <TextRow label={'Headquarters'} value={data.myAgent?.headquarters} />
-      <Divider />
-      <TextRow label={'Faction'} value={data.myAgent?.startingFaction} />
+      {!simple &&<Divider />}
+      {!simple &&<TextRow label={'Headquarters'} value={data.myAgent?.headquarters} />}
+      {!simple &&<Divider />}
+      {!simple &&<TextRow label={'Faction'} value={data.myAgent?.startingFaction} />}
     </Card>
   )
 }
